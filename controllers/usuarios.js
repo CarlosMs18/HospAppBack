@@ -1,4 +1,4 @@
-
+const Usuario = require('../models/usuarios')
 
 
 const getUsuario = (req, res) => {
@@ -7,8 +7,17 @@ const getUsuario = (req, res) => {
 }
 
 
-const crearUsuario = (req, res) => {
-    console.log('crear')
+const crearUsuario = async(req, res) => {
+        const {email, password} = req.body;
+        try {
+            
+            const emailExistente = await Usuario.findOne({email})
+            res.json(req.body)
+        
+        } catch (error) {
+            console.log(error)
+        }
+
 }
 
 

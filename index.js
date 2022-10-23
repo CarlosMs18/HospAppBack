@@ -5,9 +5,13 @@ const { connectionDB } = require('./database/connection')
 
 const app = express()
 
+connectionDB()
+
 app.use(cors())
 
-connectionDB()
+
+app.use(express.json())
+
 
 
 app.use('/api/usuarios',require('./routes/usuarios'))
