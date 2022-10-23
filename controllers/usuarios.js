@@ -3,9 +3,12 @@ const bcrypt = require('bcryptjs')
 const Usuario = require('../models/usuarios')
 
 
-const getUsuario = (req, res) => {
-    res.json('get')
-    console.log('get')
+const getUsuario = async(req, res) => {
+    const usuarios =  await Usuario.find()
+    res.json({
+        ok : true,
+        usuarios
+    })
 }
 
 
@@ -33,7 +36,7 @@ const crearUsuario = async(req, res) => {
             
             res.json({
                 ok : 'true',
-                msg : usuario
+                usuario
             })
 
 
@@ -49,14 +52,83 @@ const crearUsuario = async(req, res) => {
 }
 
 
-const actualizarUsuario = (req, res) => {
-    console.log('actualizar')
+const actualizarUsuario = async(req, res) => {
+    const uid = req.params.id
+
+    try {
+        console.log(uid)
+        const usuarioDB  = await Usuario.findById(uid)
+        console.log(usuarioDB)
+
+        if ( !usuarioDB ) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No existe un usuario por ese id'
+            });
+        }
+
+        const { password, google, email, ...campos } = req.body;
+
+
+        if ( usuarioDB.email !== email ) {
+
+            const existeEmail = await Usuario.findOne({ email });
+            if ( existeEmail ) {
+                return res.status(400).json({
+                    ok: false,
+                    msg: 'Ya existe un usuario con ese email'
+                });
+            }
+        }
+
+        campos.email = email;
+        const usuarioActualizado = await Usuario.findByIdAndUpdate( uid, campos, { new: true } );
+
+        res.json({
+            ok: true,
+            usuario: usuarioActualizado
+        });
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado'
+        })
+    }
 }
 
 
 
-const borrarUsuario = (req, res) => {
-    console.log('borrar')
+const borrarUsuario = async(req, res) => {
+    const uid = req.params.id;
+
+    try {
+
+        const usuarioDB = await Usuario.findById( uid );
+
+        if ( !usuarioDB ) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No existe un usuario por ese id'
+            });
+        }
+
+        await Usuario.findByIdAndDelete( uid );
+
+        
+        res.json({
+            ok: true,
+            msg: 'Usuario eliminado'
+        });
+
+    } catch (error) {
+        
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Hable con el administrador'
+        });
+
+    }
 }
 
 
