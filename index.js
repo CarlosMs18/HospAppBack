@@ -10,6 +10,10 @@ connectionDB()
 app.use(cors())
 
 
+//Carpeta Publica
+app.use(express.static('public'))
+
+
 app.use(express.json())
 
 
