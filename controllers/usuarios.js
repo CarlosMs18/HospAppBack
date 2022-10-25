@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs')
+const { generarJWT } = require('../helpers/jwt')
 
 const Usuario = require('../models/usuarios')
 
@@ -28,41 +29,48 @@ const getUsuario = async(req, res) => {
 
 
 const crearUsuario = async(req, res) => {
-        const {email, password} = req.body;
-        try {
-            
-            const emailExistente = await Usuario.findOne({email})
-            if(emailExistente){
-                return res.status(400).json({
-                    ok : false,
-                    msg : 'El correo ya se encuentra registrado'
-                })
-            }
+    const { email, password } = req.body;
 
-            const usuario = new Usuario(req.body)
-            
-           
+    try {
 
-            const salt = bcrypt.genSaltSync()
-            usuario.password = bcrypt.hashSync(password, salt);
+        const existeEmail = await Usuario.findOne({ email });
 
-
-            await usuario.save()
-            
-            res.json({
-                ok : 'true',
-                usuario
-            })
-
-
-        
-        } catch (error) {
-            console.log(error)
-            res.status(500).json({
-                ok : false,
-                msg : 'Error Inesperado ... Hablar con el Administrador'
-            })
+        if ( existeEmail ) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'El correo ya está registrado'
+            });
         }
+
+        const usuario = new Usuario( req.body );
+    
+        // Encriptar contraseña
+        const salt = bcrypt.genSaltSync();
+        usuario.password = bcrypt.hashSync( password, salt );
+    
+    
+        // Guardar usuario
+        await usuario.save();
+
+        // Generar el TOKEN - JWT
+        const token = await generarJWT( usuario.id );
+
+
+        res.json({
+            ok: true,
+            usuario,
+            token
+        });
+
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado... revisar logs'
+        });
+    }
+
 
 }
 
