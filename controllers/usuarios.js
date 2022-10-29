@@ -75,13 +75,16 @@ const crearUsuario = async(req, res) => {
 }
 
 
-const actualizarUsuario = async(req, res) => {
-    const uid = req.params.id
+const actualizarUsuario = async (req, res = response) => {
+
+    // TODO: Validar token y comprobar si es el usuario correcto
+
+    const uid = req.params.id;
+
 
     try {
-        console.log(uid)
-        const usuarioDB  = await Usuario.findById(uid)
-        console.log(usuarioDB)
+
+        const usuarioDB = await Usuario.findById( uid );
 
         if ( !usuarioDB ) {
             return res.status(404).json({
@@ -90,8 +93,8 @@ const actualizarUsuario = async(req, res) => {
             });
         }
 
+        // Actualizaciones
         const { password, google, email, ...campos } = req.body;
-
 
         if ( usuarioDB.email !== email ) {
 
@@ -103,7 +106,7 @@ const actualizarUsuario = async(req, res) => {
                 });
             }
         }
-
+        
         campos.email = email;
         const usuarioActualizado = await Usuario.findByIdAndUpdate( uid, campos, { new: true } );
 
@@ -111,12 +114,16 @@ const actualizarUsuario = async(req, res) => {
             ok: true,
             usuario: usuarioActualizado
         });
+
+        
     } catch (error) {
+        console.log(error);
         res.status(500).json({
             ok: false,
             msg: 'Error inesperado'
         })
     }
+
 }
 
 

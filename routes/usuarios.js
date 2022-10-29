@@ -23,7 +23,7 @@ router.put('/:id',
     validarJWT,    
     [
     check('nombre','El nombre es obligatorio').not().isEmpty(),
-    check('password','El password es obligatorio').not().isEmpty(),
+    /* check('password','El password es obligatorio').not().isEmpty(), */
     /* check('password','El password debe de tener un minimo de 5 digitos').isLength({min: 5}), */
     check('email','El email es obligatorio').isEmail(),
     validarCampos       
