@@ -15,7 +15,7 @@ const getUsuario = async(req, res) => {
     const [usuarios, total] = await Promise.all([
                         Usuario.find()
                             .skip(desde)
-                            .limit(2),
+                            .limit(5),
 
 
                         Usuario.countDocuments()
