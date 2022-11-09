@@ -45,7 +45,7 @@ const getDocumentosColeccion = async(req, res) => {
 
         case 'usuarios':
             data = await Usuario.find({nombre :regExp})
-            break;
+            break;  
         default:
             return res.status(400).json({
                 ok : false,

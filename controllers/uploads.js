@@ -24,7 +24,7 @@ const fileUpload = async(req, res) => {
     }
 
     const file = req.files.imagen;
-
+    console.log(file)
     const nombreCortado = file.name.split('.'); // wolverine.1.3.jpg
     const extensionArchivo = nombreCortado[ nombreCortado.length - 1 ]
     const extensionesValidas = ['png','jpg','jpeg','gif','jfif'];
