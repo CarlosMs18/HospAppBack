@@ -41,6 +41,7 @@ const getDocumentosColeccion = async(req, res) => {
         case 'hospitales':
             data = await Hospital.find({nombre : regExp})
                                             .populate('usuario','nombre img')
+            
             break;
 
         case 'usuarios':
