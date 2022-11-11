@@ -4,13 +4,13 @@ const path = require('path');
 const cors = require('cors')
 const { connectionDB } = require('./database/connection')
 
-const whiteList = ['https://adminpro-backendtr.herokuapp.com']
+
 
 const app = express()
 
 connectionDB()
 
-app.use(cors({origin : whiteList}))
+app.use(cors())
 
 
 
