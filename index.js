@@ -1,22 +1,25 @@
 require('dotenv').config()
 const express = require('express')
+const path = require('path');
 const cors = require('cors')
 const { connectionDB } = require('./database/connection')
+
+const whiteList = ['https://adminpro-backendtr.herokuapp.com']
 
 const app = express()
 
 connectionDB()
 
-app.use(cors())
+app.use(cors({origin : whiteList}))
 
 
-//Carpeta Publica
-app.use(express.static('public'))
+
 
 
 app.use(express.json())
 
-
+//Carpeta Publica
+app.use(express.static('public'))
 
 app.use('/api/usuarios',require('./routes/usuarios'))
 
